@@ -5,10 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.specked.education.reactive.web.foodtech.restaurants.controller.dto.RestaurantDto;
 
-import java.util.Collections;
-import java.util.List;
+import java.time.Duration;
+import java.util.Arrays;
 
 @Slf4j
 @RequestMapping("/restaurants")
@@ -16,15 +18,18 @@ import java.util.List;
 public class RestaurantsController {
 
     @GetMapping
-    public List<RestaurantDto> getRestaurants() throws InterruptedException {
-        log.info("Getting restaurants...");
-        Thread.sleep(20_000L);
-        return Collections.emptyList();
+    public Flux<RestaurantDto> getRestaurants() {
+        log.info("Getting restaurants list...");
+        return Flux.fromIterable(Arrays.asList(
+                new RestaurantDto("SuperRestaurant", 5),
+                new RestaurantDto("BadRestaurant", 2),
+                new RestaurantDto("UsualRestaurant", 4)))
+                .delayElements(Duration.ofMillis(1_000));
     }
 
     @GetMapping("/{restaurantId}/menu")
-    public String getRestaurantMenu(@PathVariable("restaurantId") Long restaurantId) {
+    public Mono<String> getRestaurantMenu(@PathVariable("restaurantId") Long restaurantId) {
         log.info("Getting menu for restaurant {}", restaurantId);
-        return "Fruits, vegetables, lemonade";
+        return Mono.just("Fruits, vegetables, lemonade");
     }
 }

@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.UUID;
 
 @Slf4j
@@ -14,9 +16,9 @@ import java.util.UUID;
 public class DeliveryController {
 
     @PostMapping("/{orderId}")
-    public void placeOrderForDelivery(@PathVariable("orderId") UUID orderId) throws InterruptedException {
+    public Mono<UUID> placeOrderForDelivery(@PathVariable("orderId") UUID orderId) {
         log.info("Placing an order for delivery: {}", orderId);
-        Thread.sleep(5_000L);
-        log.info("Order was added to delivery list!");
+        return Mono.just(UUID.randomUUID())
+                .delayElement(Duration.ofMillis(100L));
     }
 }

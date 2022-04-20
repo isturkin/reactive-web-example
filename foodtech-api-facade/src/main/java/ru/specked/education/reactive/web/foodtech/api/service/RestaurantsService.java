@@ -1,42 +1,36 @@
 package ru.specked.education.reactive.web.foodtech.api.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.specked.education.reactive.web.foodtech.api.controller.dto.RestaurantDto;
 
-import java.net.URI;
-import java.util.List;
-
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class RestaurantsService {
 
     private final String RESTAURANTS_API_URL = "http://restaurants-service:8081/restaurants";
+    private final WebClient webClient;
 
-    private final RestTemplate restTemplate;
-
-    public List<RestaurantDto> getRestaurants() {
-        log.info("Getting restaurants...");
-        String uri = UriComponentsBuilder.fromUri(URI.create(RESTAURANTS_API_URL))
-                .build()
-                .toUriString();
-        return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<RestaurantDto>>(){}).getBody();
+    public RestaurantsService() {
+        this.webClient = WebClient.create(RESTAURANTS_API_URL);
     }
 
-    public String getRestaurantMenu(Long restaurantId) {
+    public Flux<RestaurantDto> getRestaurants() {
+        log.info("Getting restaurants...");
+        return webClient.get()
+                .exchange().flatMapMany(
+                        clientResponse -> clientResponse.bodyToFlux(RestaurantDto.class)
+                );
+    }
+
+    public Mono<String> getRestaurantMenu(Long restaurantId) {
         log.info("Getting menu for restaurant: {}", restaurantId);
-        String uri = UriComponentsBuilder.fromUri(URI.create(RESTAURANTS_API_URL))
-                .path("/{restaurantId}")
-                .path("/menu")
-                .buildAndExpand(restaurantId)
-                .toUriString();
-        return restTemplate.getForObject(uri, String.class);
+        return webClient.get()
+                .retrieve()
+                .bodyToMono(String.class);
     }
 
 }
