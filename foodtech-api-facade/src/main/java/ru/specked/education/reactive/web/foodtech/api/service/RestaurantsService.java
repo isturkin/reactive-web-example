@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class RestaurantsService {
 
-    private final String RESTAURANTS_API_URL = "http://localhost:8081/restaurants";
+    private final String RESTAURANTS_API_URL = "http://restaurants-service:8081/restaurants";
 
     private final RestTemplate restTemplate;
 

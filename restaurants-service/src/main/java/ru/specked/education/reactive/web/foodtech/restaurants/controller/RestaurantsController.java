@@ -18,7 +18,7 @@ public class RestaurantsController {
     @GetMapping
     public List<RestaurantDto> getRestaurants() throws InterruptedException {
         log.info("Getting restaurants...");
-        Thread.sleep(20_000L);
+        Thread.sleep(3_000L);
         return Collections.emptyList();
     }
 
