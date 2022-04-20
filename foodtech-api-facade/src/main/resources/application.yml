@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      host: localhost
+      host: mongo
       username: root
       password: rootpassword
       authentication-database: admin

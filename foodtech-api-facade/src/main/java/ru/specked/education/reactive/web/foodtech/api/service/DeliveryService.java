@@ -14,7 +14,7 @@ import java.util.UUID;
 @Service
 public class DeliveryService {
 
-    private final String DELIVERY_API_URL = "http://localhost:8082/delivery";
+    private final String DELIVERY_API_URL = "http://delivery-service:8082/delivery";
 
     private final RestTemplate restTemplate;
 
