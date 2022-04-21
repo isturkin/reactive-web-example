@@ -9,9 +9,7 @@ import ru.specked.education.reactive.web.foodtech.api.controller.dto.OrderDto;
 import ru.specked.education.reactive.web.foodtech.api.repository.OrderEntity;
 import ru.specked.education.reactive.web.foodtech.api.repository.OrdersRepository;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,8 +26,8 @@ public class OrdersService {
 
     public Flux<OrderDto> getOrdersInRestaurant(Long restaurantId) {
         log.info("Try to get all orders in restaurant with id: {}", restaurantId);
-        Flux<OrderEntity> orders = ordersRepository.findByRestaurantId(restaurantId);
-        return orders.map(this::mapToDto);
+        return ordersRepository.findByRestaurantId(restaurantId)
+                .map(this::mapToDto);
     }
 
     private OrderEntity mapToEntity(OrderDto orderDto) {
