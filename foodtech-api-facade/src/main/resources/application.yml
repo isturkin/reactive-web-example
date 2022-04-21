@@ -8,7 +8,7 @@ spring:
 
 server:
   tomcat:
-    max-threads: 10
+    max-threads: 100
 
 logging:
   level:
